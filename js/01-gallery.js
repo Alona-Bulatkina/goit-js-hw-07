@@ -31,23 +31,30 @@ function createGallery(galleryItems) {
 galleryContainer.addEventListener("click", onGalleryClick);
 
 function onGalleryClick(event) {event.preventDefault();
-const instance = basicLightbox.create (`
-<div class="modal">
-<img src="${event.target.dataset.source}" class="js-modal-img" width="800" height="600">
-  </div>
+const instance = basicLightbox.create(`
+    <div class="modal">
+    <img src="${event.target.dataset.source}" class="js-modal-img" width="800" height="600">
+    <a class="close-lightbox">Close</a>
+    </div>
 `, {
-    onShow: (instance) => {
-        window.addEventListener("keydown", onKeyboardClick);
+      onShow: instance => {
+        instance
+          .element('.modal')
+          .querySelector('.close-lightbox')
+          .addEventListener('click', instance.close, { once: true });
+      },
+      onShow: instance => {
+        document.addEventListener("keydown", onKeyboardClick);
         function onKeyboardClick(event) {
-          if (event.code === 'Escape') { 
+          if (event.key === 'Escape') { 
               instance.close();
-              window.removeEventListener('keydown', onKeyboardClick);
+              document.removeEventListener('keydown', onKeyboardClick);
             };
         };
-    
-          instance.element().querySelector('.js-modal-img').addEventListener("click", () => {
-             instance.close();
-         });
-        },
-    }).show();
     }
+  })
+instance.show();
+}
+
+
+    
