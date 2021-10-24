@@ -31,6 +31,9 @@ function createGallery(galleryItems) {
 galleryContainer.addEventListener("click", onGalleryClick);
 
 function onGalleryClick(event) {event.preventDefault();
+  if (event.target.nodeName !== 'IMG') {
+    return;
+  }
 const instance = basicLightbox.create(`
     <div class="modal">
     <img src="${event.target.dataset.source}" class="js-modal-img" width="800" height="600">
@@ -38,20 +41,14 @@ const instance = basicLightbox.create(`
     </div>
 `, {
       onShow: instance => {
-        instance
-          .element('.modal')
-          .querySelector('.close-lightbox')
-          .addEventListener('click', instance.close, { once: true });
-      },
-      onShow: instance => {
-        document.addEventListener("keydown", onKeyboardClick);
+       window.addEventListener("keydown", onKeyboardClick);
         function onKeyboardClick(event) {
           if (event.key === 'Escape') { 
               instance.close();
-              document.removeEventListener('keydown', onKeyboardClick);
+              window.removeEventListener('keydown', onKeyboardClick);
             };
         };
-    }
+     }
   })
 instance.show();
 }
